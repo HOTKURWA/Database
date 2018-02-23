@@ -8,28 +8,28 @@ public class Database
 {
     public static void main(String []args)
     {
-        ButtonFrame frame= new ButtonFrame();//создаем фрейм
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//операция отвечающая за окончание программы после закрытия фрейма
-        frame.setVisible(true);//делаем фрейм видимым
+        ButtonFrame frame= new ButtonFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         
     }
 }
 
 class ButtonFrame extends JFrame
-{//создаем класс отвечающий за фрейм
+{
     public ButtonFrame()
-    {//конструктор данного класа
-        setSize(230,400);//размеры фрейма
-        setTitle("Database");//название фрейма
-        LoginPanel panel = new LoginPanel();//создаем панель
-        add(panel);//добавляем панель на фрейм
+    {
+        setSize(230,400);
+        setTitle("Database");
+        LoginPanel panel = new LoginPanel();
+        add(panel);
     }
 }
 
 class LoginPanel extends JPanel
-{//класс отвечающий за фрейм
+{
     public LoginPanel()
-    { //конструктор панели
+    { 
         String s; 
         JTextField LoginField = new JTextField(10);
         JTextField PasswordField = new JTextField(10);
@@ -45,7 +45,7 @@ class LoginPanel extends JPanel
 
         add(LoginButton);
         
-        LoginButton.addActionListener(new java.awt.event.ActionListener() { //привязываем слушатель
+        LoginButton.addActionListener(new java.awt.event.ActionListener() { 
             public void actionPerformed(ActionEvent e) 
             { 
                 String StringLogin = (LoginField.getText());
@@ -53,7 +53,7 @@ class LoginPanel extends JPanel
                        
                 if(StringLogin.equals("a")&StringPassword.equals("a"))
                 {
-                   System.out.println("Успешный вход");     
+                   System.out.println("???????? ????");     
                    System.exit(0);
                 }
             }
