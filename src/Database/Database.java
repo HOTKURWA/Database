@@ -21,17 +21,23 @@ class ButtonFrame extends JFrame
     {
         setSize(800,600);
         setTitle("Database");
-        LoginPanel panel = new LoginPanel();
-        add(panel);
+        BasePanel panel = new BasePanel();
         panel.setLayout(null);
+        add(panel);
     }
 }
 
-class LoginPanel extends JPanel
+class BasePanel extends JPanel
 {
-    public LoginPanel()
+    public BasePanel()
     { 
-
+        LoginPanel();
+    }
+    
+    private void LoginPanel()
+    {
+             
+        
         JTextField LoginField = new JTextField(10);
         JTextField PasswordField = new JTextField(10);
         JButton LoginButton = new JButton("Login");
@@ -66,7 +72,7 @@ class LoginPanel extends JPanel
                     //}
                     }
             //}
-        //});
+        //});  
     }
     
     private void Developer() 
@@ -75,6 +81,8 @@ class LoginPanel extends JPanel
     }
     private void Customer() 
     {
+        SomeButton();
+        
         JButton AddOrderButton = new JButton("Сделать заказ");
         JButton MyOrderButton = new JButton("Мои заказы");
         
@@ -90,20 +98,20 @@ class LoginPanel extends JPanel
        AddOrderButton.addActionListener(new java.awt.event.ActionListener() { 
             public void actionPerformed(ActionEvent e) 
             { 
-                removeAll();
+                SomeButton();
                 
                 JLabel textOrdering = new JLabel("Оформление заказа");
                 JLabel textdescription = new JLabel("Напишите, какую программу вы хотите:");
                 JTextArea TextFieldOrdering = new JTextArea();
                 
-                textOrdering.setFont(new Font("Serif", Font.PLAIN, 20));
+                textOrdering.setFont(new Font("Serif", Font.BOLD, 20));
                 TextFieldOrdering.setLineWrap(true);
                 TextFieldOrdering.setWrapStyleWord(true);
                 TextFieldOrdering.setFont(new Font("Serif", Font.ITALIC, 16));
                                                 
-                textOrdering.setBounds(320, 5, 300, 30);
-                textdescription.setBounds(10, 50, 300, 30);
-                TextFieldOrdering.setBounds(10, 80, 760, 400);
+                textOrdering.setBounds(320, 25, 300, 30);
+                textdescription.setBounds(10, 70, 300, 30);
+                TextFieldOrdering.setBounds(10, 100, 760, 400);
                 
                 add(textOrdering);
                 add(textdescription);
@@ -118,12 +126,36 @@ class LoginPanel extends JPanel
         AddOrderButton.addActionListener(new java.awt.event.ActionListener() { 
             public void actionPerformed(ActionEvent e) 
             { 
-                removeAll();
-                repaint();
-                
-                
+                SomeButton();
             }
        });
-    
+
+    }
+        private void SomeButton()
+    {
+        removeAll();
+        repaint();
+        
+        JLabel NameUser = new JLabel("Пупченко А. В."); //данные с бд      
+        JButton UnLoginButton = new JButton("Выйти");
+        
+        NameUser.setFont(new Font("Serif", Font.ITALIC, 15));
+        UnLoginButton.setBackground(Color.RED);
+        
+                
+        NameUser.setBounds(10, 2, 100, 30);
+        UnLoginButton.setBounds(690, 5, 80, 30);
+                
+        add(NameUser);
+        add(UnLoginButton);
+        
+        UnLoginButton.addActionListener(new java.awt.event.ActionListener() { 
+            public void actionPerformed(ActionEvent e) 
+            { 
+                LoginPanel();
+            }
+       });
+
+               
     }
 }
