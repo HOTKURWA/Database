@@ -19,10 +19,11 @@ class ButtonFrame extends JFrame
 {
     public ButtonFrame()
     {
-        setSize(230,400);
+        setSize(800,600);
         setTitle("Database");
         LoginPanel panel = new LoginPanel();
         add(panel);
+        panel.setLayout(null);
     }
 }
 
@@ -30,17 +31,18 @@ class LoginPanel extends JPanel
 {
     public LoginPanel()
     { 
-        String s; 
+
         JTextField LoginField = new JTextField(10);
         JTextField PasswordField = new JTextField(10);
         JButton LoginButton = new JButton("Login");
         LoginButton.setBackground(Color.WHITE);
-        LoginButton.setBounds(54, 54, 845, 300);
         
-        add(new JLabel("Login:", SwingConstants.RIGHT));
+        LoginField.setBounds(325, 110, 150, 30);
+        PasswordField.setBounds(325, 150, 150, 30);
+        LoginButton.setBounds(350, 200, 100, 30);
+
         add(LoginField);
         
-        add(new JLabel("Password:", SwingConstants.RIGHT));
         add(PasswordField);
 
         add(LoginButton);
@@ -51,12 +53,35 @@ class LoginPanel extends JPanel
                 String StringLogin = (LoginField.getText());
                 String StringPassword = (PasswordField.getText());
                        
-                if(StringLogin.equals("a")&StringPassword.equals("a"))
+                if((StringLogin.equals("a")&StringPassword.equals("a"))||(StringLogin.equals("b")&StringPassword.equals("b")))
                 {
-                   System.out.println("???????? ????");     
-                   System.exit(0);
+                    
+                    removeAll();
+                    validate();
+                    repaint();
+                    
+                    if(StringLogin.equals("a"))
+                    {
+                        Developer();      
+                    }else
+                    {
+                        Customer();     
+                    }
                 }
             }
         });
+    }
+    
+    private void Developer() 
+    {        
+        System.out.println("Hi Developer");
+    }
+    private void Customer() 
+    {
+        JButton Button = new JButton("Button");
+        Button.setBackground(Color.WHITE);
+        Button.setBounds(325, 110, 150, 30);
+        add(Button);
+        System.out.println("Hi Customer");                 
     }
 }
