@@ -42,22 +42,19 @@ class LoginPanel extends JPanel
         LoginButton.setBounds(350, 200, 100, 30);
 
         add(LoginField);
-        
         add(PasswordField);
-
         add(LoginButton);
         
-        LoginButton.addActionListener(new java.awt.event.ActionListener() { 
-            public void actionPerformed(ActionEvent e) 
-            { 
+        //LoginButton.addActionListener(new java.awt.event.ActionListener() { 
+        //    public void actionPerformed(ActionEvent e) 
+        //    { 
                 String StringLogin = (LoginField.getText());
                 String StringPassword = (PasswordField.getText());
                        
-                if((StringLogin.equals("a")&StringPassword.equals("a"))||(StringLogin.equals("b")&StringPassword.equals("b")))
-                {
+                //if((StringLogin.equals("a")&StringPassword.equals("a"))||(StringLogin.equals("b")&StringPassword.equals("b")))
+                //{
                     
                     removeAll();
-                    validate();
                     repaint();
                     
                     if(StringLogin.equals("a"))
@@ -66,10 +63,10 @@ class LoginPanel extends JPanel
                     }else
                     {
                         Customer();     
+                    //}
                     }
-                }
-            }
-        });
+            //}
+        //});
     }
     
     private void Developer() 
@@ -78,10 +75,55 @@ class LoginPanel extends JPanel
     }
     private void Customer() 
     {
-        JButton Button = new JButton("Button");
-        Button.setBackground(Color.WHITE);
-        Button.setBounds(325, 110, 150, 30);
-        add(Button);
-        System.out.println("Hi Customer");                 
+        JButton AddOrderButton = new JButton("Сделать заказ");
+        JButton MyOrderButton = new JButton("Мои заказы");
+        
+        AddOrderButton.setBounds(325, 110, 150, 30);
+        MyOrderButton.setBounds(325, 160, 150, 30);
+        
+        AddOrderButton.setBackground(Color.WHITE);
+        MyOrderButton.setBackground(Color.WHITE);
+        
+        add(AddOrderButton);
+        add(MyOrderButton);  
+        
+       AddOrderButton.addActionListener(new java.awt.event.ActionListener() { 
+            public void actionPerformed(ActionEvent e) 
+            { 
+                removeAll();
+                
+                JLabel textOrdering = new JLabel("Оформление заказа");
+                JLabel textdescription = new JLabel("Напишите, какую программу вы хотите:");
+                JTextArea TextFieldOrdering = new JTextArea();
+                
+                textOrdering.setFont(new Font("Serif", Font.PLAIN, 20));
+                TextFieldOrdering.setLineWrap(true);
+                TextFieldOrdering.setWrapStyleWord(true);
+                TextFieldOrdering.setFont(new Font("Serif", Font.ITALIC, 16));
+                                                
+                textOrdering.setBounds(320, 5, 300, 30);
+                textdescription.setBounds(10, 50, 300, 30);
+                TextFieldOrdering.setBounds(10, 80, 760, 400);
+                
+                add(textOrdering);
+                add(textdescription);
+                add(TextFieldOrdering);
+                
+                repaint();
+                
+            }
+       });
+       
+       
+        AddOrderButton.addActionListener(new java.awt.event.ActionListener() { 
+            public void actionPerformed(ActionEvent e) 
+            { 
+                removeAll();
+                repaint();
+                
+                
+            }
+       });
+    
     }
 }
