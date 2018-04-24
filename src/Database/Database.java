@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class Database 
 {
@@ -62,11 +65,11 @@ class BasePanel extends JPanel
                     
 //                    if(StringLogin.equals("a"))
 //                    {
-//                        Developer();      
+                        Developer();      
 //                    }else
-                    {
-                        Customer();     
-                    }
+//                    {
+//                        Customer();     
+//                    }
 //                    }
 //            }
 //        });  
@@ -75,7 +78,9 @@ class BasePanel extends JPanel
     private void Developer() 
     {        
         SomeButton();
+        testDatabase();
         System.out.println("Hi Developer");
+        
     }
     private void Customer() 
     {
@@ -169,35 +174,28 @@ class BasePanel extends JPanel
             { 
                 removeAll();
                 repaint();
+                
                 LoginPanel();
             }
-       });
-
-//        private void testDatabase() {
-//        try {
-//            Class.forName("org.postgresql.Driver");
-//            String url = "jdbc:postgresql://localhost:5432/contactdb";
-//            String login = "postgres";
-//            String password = "postgres";
-//            Connection con = DriverManager.getConnection(url, login, password);
-//            try {
-//                Statement stmt = con.createStatement();
-//                ResultSet rs = stmt.executeQuery("SELECT * FROM JC_CONTACT");
-//                while (rs.next()) {
-//                    String str = rs.getString("contact_id") + ":" + rs.getString(2);
-//                    System.out.println("Contact:" + str);
-//                }
-//                rs.close();
-//                stmt.close();
-//            } finally {
-//                con.close();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        }
-    
-
-               
+       });          
     }
+    
+        private void testDatabase() 
+        {
+
+            String url = "jdbc:postgresql://localhost:5432/DataBase";
+            String user = "postgres";
+            String password = "14589";
+
+            Connection connection = null;
+            try {
+                connection = DriverManager.getConnection(url,user, password);
+                connection.close();
+                } 
+            catch (SQLException ex) 
+                {
+                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                }   
+        }
 }
+
