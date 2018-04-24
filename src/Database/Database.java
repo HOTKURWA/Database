@@ -3,6 +3,7 @@ package Database;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.*;
 
 public class Database 
 {
@@ -36,11 +37,9 @@ class BasePanel extends JPanel
     
     private void LoginPanel()
     {
-             
-        
         JTextField LoginField = new JTextField(10);
         JTextField PasswordField = new JTextField(10);
-        JButton LoginButton = new JButton("Login");
+        JButton LoginButton = new JButton("Войти");
         LoginButton.setBackground(Color.WHITE);
         
         LoginField.setBounds(325, 110, 150, 30);
@@ -51,32 +50,31 @@ class BasePanel extends JPanel
         add(PasswordField);
         add(LoginButton);
         
-        //LoginButton.addActionListener(new java.awt.event.ActionListener() { 
-        //    public void actionPerformed(ActionEvent e) 
-        //    { 
-                String StringLogin = (LoginField.getText());
-                String StringPassword = (PasswordField.getText());
-                       
-                //if((StringLogin.equals("a")&StringPassword.equals("a"))||(StringLogin.equals("b")&StringPassword.equals("b")))
-                //{
+//        LoginButton.addActionListener(new java.awt.event.ActionListener() { 
+//            public void actionPerformed(ActionEvent e) 
+//            { 
+//                String StringLogin = (LoginField.getText());
+//                String StringPassword = (PasswordField.getText());
+//                       
+//                if((StringLogin.equals("a")&StringPassword.equals("a"))||(StringLogin.equals("b")&StringPassword.equals("b")))
+//                {
                     
-                    removeAll();
-                    repaint();
                     
-                    if(StringLogin.equals("a"))
-                    {
-                        Developer();      
-                    }else
+//                    if(StringLogin.equals("a"))
+//                    {
+//                        Developer();      
+//                    }else
                     {
                         Customer();     
-                    //}
                     }
-            //}
-        //});  
+//                    }
+//            }
+//        });  
     }
     
     private void Developer() 
     {        
+        SomeButton();
         System.out.println("Hi Developer");
     }
     private void Customer() 
@@ -100,25 +98,41 @@ class BasePanel extends JPanel
             { 
                 SomeButton();
                 
-                JLabel textOrdering = new JLabel("Оформление заказа");
+                int NumberOrder = 1;
+                JLabel textOrdering = new JLabel("Оформление заказа № "+ NumberOrder);
                 JLabel textdescription = new JLabel("Напишите, какую программу вы хотите:");
                 JTextArea TextFieldOrdering = new JTextArea();
+                JButton SendButton = new JButton("Отправить");
                 
                 textOrdering.setFont(new Font("Serif", Font.BOLD, 20));
                 TextFieldOrdering.setLineWrap(true);
                 TextFieldOrdering.setWrapStyleWord(true);
                 TextFieldOrdering.setFont(new Font("Serif", Font.ITALIC, 16));
+                SendButton.setBackground(Color.WHITE);
                                                 
                 textOrdering.setBounds(320, 25, 300, 30);
                 textdescription.setBounds(10, 70, 300, 30);
                 TextFieldOrdering.setBounds(10, 100, 760, 400);
+                SendButton.setBounds(320, 520, 100, 30);
                 
                 add(textOrdering);
                 add(textdescription);
                 add(TextFieldOrdering);
+                add(SendButton);
                 
                 repaint();
                 
+                SendButton.addActionListener(new java.awt.event.ActionListener() 
+                { 
+                    public void actionPerformed(ActionEvent e)         
+                    {
+                        String SrtingFieldOrdering;
+                        SrtingFieldOrdering = TextFieldOrdering.getText();
+                        
+                        Customer();
+                        //Занести в бд
+                    }
+                }); 
             }
        });
        
@@ -136,11 +150,12 @@ class BasePanel extends JPanel
         removeAll();
         repaint();
         
-        JLabel NameUser = new JLabel("Пупченко А. В."); //данные с бд      
+        String NameUserString = "Пупченко А.В.";
+        JLabel NameUser = new JLabel(NameUserString); //данные с бд      
         JButton UnLoginButton = new JButton("Выйти");
         
         NameUser.setFont(new Font("Serif", Font.ITALIC, 15));
-        UnLoginButton.setBackground(Color.RED);
+        UnLoginButton.setBackground(Color.WHITE);
         
                 
         NameUser.setBounds(10, 2, 100, 30);
@@ -152,9 +167,36 @@ class BasePanel extends JPanel
         UnLoginButton.addActionListener(new java.awt.event.ActionListener() { 
             public void actionPerformed(ActionEvent e) 
             { 
+                removeAll();
+                repaint();
                 LoginPanel();
             }
        });
+
+//        private void testDatabase() {
+//        try {
+//            Class.forName("org.postgresql.Driver");
+//            String url = "jdbc:postgresql://localhost:5432/contactdb";
+//            String login = "postgres";
+//            String password = "postgres";
+//            Connection con = DriverManager.getConnection(url, login, password);
+//            try {
+//                Statement stmt = con.createStatement();
+//                ResultSet rs = stmt.executeQuery("SELECT * FROM JC_CONTACT");
+//                while (rs.next()) {
+//                    String str = rs.getString("contact_id") + ":" + rs.getString(2);
+//                    System.out.println("Contact:" + str);
+//                }
+//                rs.close();
+//                stmt.close();
+//            } finally {
+//                con.close();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        }
+    
 
                
     }
