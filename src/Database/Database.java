@@ -32,6 +32,7 @@ class ButtonFrame extends JFrame
 class BasePanel extends JPanel
 {
     private boolean user;
+    private String UserName;
     public BasePanel()
     { 
         LoginPanel();
@@ -40,7 +41,7 @@ class BasePanel extends JPanel
     private void LoginPanel()
     {
         JTextField LoginField = new JTextField(10);
-        JTextField PasswordField = new JTextField(10);
+        JPasswordField PasswordField = new JPasswordField(10);
         JButton LoginButton = new JButton("Войти");
         LoginButton.setBackground(Color.WHITE);
         
@@ -80,6 +81,7 @@ class BasePanel extends JPanel
                                                                         
                                     if(StringLogin.equals(strLogin)&StringPassword.equals(strPassword))
                                     {
+                                        UserName = Custrs.getString("Ф.И.О. заказчика");
                                         user=true;
                                         Developer();
                                     } 
@@ -92,9 +94,10 @@ class BasePanel extends JPanel
                                     
                                     String strLogin = Execurs.getString("Логин исполнителя");
                                     String strPassword = Execurs.getString("Пароль исполнителя");                                  
-                                    
+                                   
                                     if(StringLogin.equals(strLogin)&StringPassword.equals(strPassword))
                                     {
+                                        UserName = Execurs.getString("Ф.И.О. Исполнителя");
                                         user=false;
                                         Customer();
                                     } 
@@ -226,8 +229,7 @@ class BasePanel extends JPanel
         removeAll();
         repaint();
         
-        String NameUserString = "Пупченко А.В.";
-        JLabel NameUser = new JLabel(NameUserString); //данные с бд      
+        JLabel NameUser = new JLabel(UserName); //данные с бд      
         JButton UnLoginButton = new JButton("Выйти");
         JButton HomeButton = new JButton("Главная");
 
