@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Database 
 {
@@ -12,8 +14,6 @@ public class Database
         ButtonFrame frame= new ButtonFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        
-        
     }
 }
 
@@ -53,25 +53,64 @@ class BasePanel extends JPanel
         add(LoginButton);
         
         LoginButton.addActionListener(new java.awt.event.ActionListener() { 
+            @SuppressWarnings("empty-statement")
             public void actionPerformed(ActionEvent e) 
             { 
-                String StringLogin = (LoginField.getText());
-                String StringPassword = (PasswordField.getText());
-                       
-                if((StringLogin.equals("a")&StringPassword.equals("a"))||(StringLogin.equals("b")&StringPassword.equals("b")))
-                {
-                    
-                    
-                    if(StringLogin.equals("a"))
-                    {
-                        user=true;
-                        Developer();      
-                    }else
-                    {
-                        user=false;
-                        Customer();     
-                    }
-                    }
+                        try { 
+                            String StringLogin = (LoginField.getText());
+                            String StringPassword = (PasswordField.getText());
+                            
+                            
+                            Class.forName("org.postgresql.Driver");
+                            String url = "jdbc:postgresql://localhost:5432/DataBase";
+                            String login = "postgres";
+                            String password = "14589";
+                            Connection con = DriverManager.getConnection(url, login, password);
+                            try {
+                                Statement stmt1 = con.createStatement();
+                                Statement stmt2 = con.createStatement();
+                                
+                                ResultSet Custrs = stmt1.executeQuery("SELECT * FROM \"public\".\"Customer\"");
+                                ResultSet Execurs = stmt2.executeQuery("SELECT * FROM \"public\".\"Executor\"");
+                                
+                                while (Custrs.next()) {
+                                    
+                                    String strLogin = Custrs.getString("Логин заказчика");
+                                    String strPassword = Custrs.getString("Пароль заказчика");
+                                                                        
+                                    if(StringLogin.equals(strLogin)&StringPassword.equals(strPassword))
+                                    {
+                                        user=true;
+                                        Developer();
+                                    } 
+                                }
+                                
+                                stmt1.close();
+                                Custrs.close();
+                                
+                                while (Execurs.next()) {
+                                    
+                                    String strLogin = Execurs.getString("Логин исполнителя");
+                                    String strPassword = Execurs.getString("Пароль исполнителя");                                  
+                                    
+                                    if(StringLogin.equals(strLogin)&StringPassword.equals(strPassword))
+                                    {
+                                        user=false;
+                                        Customer();
+                                    } 
+                                }
+                                
+                                stmt2.close();
+                                Execurs.close();
+
+                            } finally {
+                                con.close();
+                            }
+                        }   catch (ClassNotFoundException ex) {
+                    Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });  
     }
@@ -80,7 +119,6 @@ class BasePanel extends JPanel
     {        
         SomeButton();
         System.out.println("Hi Developer");
-        testDatabase();
     }
     private void Customer() 
     {
@@ -231,27 +269,4 @@ class BasePanel extends JPanel
             }
        });
     }
-
-    private void testDatabase() {
-        try {
-            Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost:5432/DataBase";
-            String login = "postgres";
-            String password = "14589";
-            Connection con = DriverManager.getConnection(url, login, password);
-            try {
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM \"public\".\"Customer\"");
-                while (rs.next()) {
-                    String str = rs.getString("Логин заказчика") + ":" + rs.getString("Пароль заказчика");
-                    System.out.println(" " + str);
-                }
-                rs.close();
-                stmt.close();
-            } finally {
-                con.close();
-            }
-        } catch (Exception e) 
-            {e.printStackTrace();}
-        }
 }
