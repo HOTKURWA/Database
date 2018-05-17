@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -177,25 +176,26 @@ class BasePanel extends JPanel {
                 try {
                     String SrtingFieldOrdering;
                     SrtingFieldOrdering = TextFieldOrdering.getText();
-                    java.util.Date dt = new java.util.Date();
-
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                     Connection con = DriverManager.getConnection(url, login, password);
-                    String query1 = "INSERT INTO \"Job\"(\"Код работы\", \"Описание\",  \"Трудоемкость работы\") VALUES(?, ?, ?)";
-                    String query2 = "INSERT INTO \"Project\"(\"Код проекта\", \"Код заказчика\",\"Название проекта\") VALUES(?, ?, ?)";
+                    String query1 = "INSERT INTO \"Job\"(\"Код работы\", \"Описание\",  \"Трудоемкость работы\", \"Код проекта\", \"Код вида работы\") VALUES(?, ?, ?, 1, 5)";
+                    String query2 = "INSERT INTO \"Project\"(\"Код проекта\", \"Код заказчика\",\"Название проекта\",\"Стоимость проекта\",\"Код исполнитея\",\"Трудоемкость проекта\") VALUES(?, ?, ?, 1000, 1, 1)";
+                    String query3 = "INSERT INTO \"Type of work\"(\"Номер этапа разаботки\") VALUES(1)";
+
                     PreparedStatement pst1 = con.prepareStatement(query1);
                     PreparedStatement pst2 = con.prepareStatement(query2);
+                    PreparedStatement pst3 = con.prepareStatement(query3);
 
                     pst1.setInt(1, CodeTypeWork);
                     pst1.setString(2, SrtingFieldOrdering);
-                    pst1.setInt(3, 1);
-                    pst1.executeUpdate();
 
                     pst2.setInt(1, CodeTypeWork);
                     pst2.setInt(2, UserID);
                     pst2.setString(3, SrtingFieldOrdering);
                     pst2.executeUpdate();
+
+                    pst1.setInt(3, CodeTypeWork);
+                    pst1.executeUpdate();
 
                     con.close();
 
@@ -208,36 +208,80 @@ class BasePanel extends JPanel {
 
         MyOrderButton.addActionListener((ActionEvent e) -> {
             SomeButton();
+            int IdProject, i = 0, SizeOfTable = 2;
+            String[][] date = new String[10][5];
+            try {
+                int IdCustomer;
+                Connection con = DriverManager.getConnection(url, login, password);
+                Statement stmt1 = con.createStatement();
+                Statement stmt2 = con.createStatement();
+                Statement stmt3 = con.createStatement();
+                Statement stmt4 = con.createStatement();
+
+                date[0][0] = "Код";
+                date[0][1] = "Название";
+                date[0][2] = "Дата заказа";
+                date[0][3] = "Стоимость";
+                date[0][4] = "Этап";
+
+                ResultSet Custrs_Project = stmt1.executeQuery("SELECT * FROM \"public\".\"Project\"");
+                ResultSet Custrs_Job = stmt2.executeQuery("SELECT * FROM \"public\".\"Job\"");
+                ResultSet Custrs_TypeOfWork = stmt3.executeQuery("SELECT * FROM \"public\".\"Type of work\"");
+                ResultSet Custrs_Stage_OfDevelopment = stmt4.executeQuery("SELECT * FROM \"public\".\"Stage of development\"");
+
+                while (Custrs_Project.next()) {
+                    IdCustomer = Custrs_Project.getInt("Код заказчика");
+                    if (IdCustomer == UserID) {
+                        i++;
+                        IdProject = Custrs_Project.getInt("Код проекта");
+                        date[i][0] = String.valueOf(IdProject);
+                        date[i][1] = Custrs_Project.getString("Название проекта");
+                        date[i][2] = Custrs_Project.getString("Дата заказа проекта");
+                        date[i][3] = Custrs_Project.getString("Стоимость проекта");
+
+                        while (Custrs_Job.next()) {
+                            Integer ToDevelop[] = new Integer[100];
+                            ToDevelop[0] = Custrs_Job.getInt("Код проекта");
+
+                            if (IdProject == ToDevelop[0]) {
+                                ToDevelop[1] = Custrs_Job.getInt("Код вида работы");
+                                int IdTOW;
+                                while (Custrs_TypeOfWork.next()) {
+                                    IdTOW = Custrs_TypeOfWork.getInt("Код вида работы");
+                                    if (IdTOW == ToDevelop[1]) {
+                                        ToDevelop[2] = Custrs_TypeOfWork.getInt("Номер этапа разаботки");
+                                        while (Custrs_Stage_OfDevelopment.next()) {
+                                            IdTOW = Custrs_Stage_OfDevelopment.getInt("Номер этапа разработки");
+                                            if (IdTOW == ToDevelop[2]) {
+                                                date[i][4] = Custrs_Stage_OfDevelopment.getString("Наименование этапа");
+                                                SizeOfTable++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             String[] columnNames = {
-                "Код проекта",
-                "Название проекта",
+                "Код",
+                "Название",
                 "Дата заказа",
-                "Стоимость проекта",
-                "Этап разработки"
+                "Стоимость",
+                "Этап"
             };
 
-            String[][] data = new String[21][5];
-            data[0][0] = "Код проекта";
-            data[0][1] = "Название проекта";
-            data[0][2] = "Дата заказа";
-            data[0][3] = "Стоимость проекта";
-            data[0][4] = "Этап разработки";
-
-            for (int i = 1; i < 21; i++) {
-                data[i][0] = " " + i;
-                data[i][1] = "Lol" + i;
-                data[i][2] = "sshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" + i;
-                data[i][3] = "" + 6 + i;
-                data[i][4] = "dds" + i;
-                //Данные из бд
-            };
-            JTable MyOrderTable = new JTable(data, columnNames);
+            JTable MyOrderTable = new JTable(date, columnNames);
+            JScrollPane scrollPane = new JScrollPane(MyOrderTable);
+            MyOrderTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
+            add(scrollPane);
             //JScrollPane scrollPane = new JScrollPane(MyOrderTable);
 
             MyOrderTable.setBounds(200, 100, 375, 338);
-            MyOrderTable.setBackground(Color.WHITE);
-
             add(MyOrderTable);
         });
 
