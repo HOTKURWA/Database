@@ -3,7 +3,9 @@ package Database;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,10 +110,53 @@ class BasePanel extends JPanel {
 
     private void Developer() {
         SomeButton();
-        System.out.println("Hi Developer");
-    }
+        
+        String[] items = {
+            "1. Проект",
+            "2. Работа",
+            "3. Сдано",
+            "4. Вид работы",
+            "5. Этап разработки"
+        };
+        JComboBox comboBox = new JComboBox(items);
+        comboBox.setBounds(20, 50, 200, 30);
+        comboBox.setBackground(Color.WHITE);
 
-    @SuppressWarnings("empty-statement")
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                switch (comboBox.getSelectedIndex()) {
+
+                    case 0: {
+
+                        break;
+                    }
+                    case 1: {
+                        
+                        break;
+                    }
+                    case 2: {
+
+                        
+                        break;
+                    }
+                    default: {
+                        validate();
+                        break;
+                    }
+
+                }
+                validate();
+                repaint();
+            }
+
+        };
+        add(comboBox);
+        comboBox.addActionListener(actionListener);
+}
+
+@SuppressWarnings("empty-statement")
     private void Customer() {
         SomeButton();
 
@@ -142,14 +187,16 @@ class BasePanel extends JPanel {
                         CodeTypeWork = max;
                     }
                 }
-                CodeTypeWork++;
                 stmt1.close();
                 con.close();
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+            
+
+} catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(BasePanel.class
+.getName()).log(Level.SEVERE, null, ex);
             }
 
-            JLabel textOrdering = new JLabel("Оформление заказа № " + CodeTypeWork);
+            JLabel textOrdering = new JLabel("Оформление заказа № " + (CodeTypeWork + 1));
             JLabel textdescription = new JLabel("Напишите, какую программу вы хотите:");
             JTextArea TextFieldOrdering = new JTextArea();
             JButton SendButton = new JButton("Отправить");
@@ -174,11 +221,13 @@ class BasePanel extends JPanel {
 
             SendButton.addActionListener((ActionEvent e1) -> {
                 try {
+                    CodeTypeWork++;
+
                     String SrtingFieldOrdering;
                     SrtingFieldOrdering = TextFieldOrdering.getText();
 
                     Connection con = DriverManager.getConnection(url, login, password);
-                    String query1 = "INSERT INTO \"Job\"(\"Код работы\", \"Описание\",  \"Трудоемкость работы\", \"Код проекта\", \"Код вида работы\") VALUES(?, ?, ?, 1, 5)";
+                    String query1 = "INSERT INTO \"Job\"(\"Код работы\", \"Описание\", \"Код проекта\",\"Трудоемкость работы\", \"Код вида работы\") VALUES(?, ?, ?, 1, 5)";
                     String query2 = "INSERT INTO \"Project\"(\"Код проекта\", \"Код заказчика\",\"Название проекта\",\"Стоимость проекта\",\"Код исполнитея\",\"Трудоемкость проекта\") VALUES(?, ?, ?, 1000, 1, 1)";
                     String query3 = "INSERT INTO \"Type of work\"(\"Номер этапа разаботки\") VALUES(1)";
 
@@ -200,16 +249,20 @@ class BasePanel extends JPanel {
                     con.close();
 
                     Customer();
-                } catch (SQLException ex) {
-                    Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                
+
+} catch (SQLException ex) {
+                    Logger.getLogger(BasePanel.class
+.getName()).log(Level.SEVERE, null, ex);
                 }
             });
         });
 
         MyOrderButton.addActionListener((ActionEvent e) -> {
             SomeButton();
-            int IdProject, i = 0, SizeOfTable = 2;
+            int i = 0, SizeOfTable = 2;
             String[][] date = new String[10][5];
+            Integer ToDevelop[] = new Integer[100];
             try {
                 int IdCustomer;
                 Connection con = DriverManager.getConnection(url, login, password);
@@ -227,35 +280,43 @@ class BasePanel extends JPanel {
                 ResultSet Custrs_Project = stmt1.executeQuery("SELECT * FROM \"public\".\"Project\"");
                 ResultSet Custrs_Job = stmt2.executeQuery("SELECT * FROM \"public\".\"Job\"");
                 ResultSet Custrs_TypeOfWork = stmt3.executeQuery("SELECT * FROM \"public\".\"Type of work\"");
-                ResultSet Custrs_Stage_OfDevelopment = stmt4.executeQuery("SELECT * FROM \"public\".\"Stage of development\"");
+                ResultSet Custrs_StageOfDevelopment = stmt4.executeQuery("SELECT * FROM \"public\".\"Stage of development\"");
 
                 while (Custrs_Project.next()) {
                     IdCustomer = Custrs_Project.getInt("Код заказчика");
                     if (IdCustomer == UserID) {
                         i++;
-                        IdProject = Custrs_Project.getInt("Код проекта");
-                        date[i][0] = String.valueOf(IdProject);
+                        ToDevelop[0] = Custrs_Project.getInt("Код проекта");
+                        date[i][0] = String.valueOf(ToDevelop[0]);
                         date[i][1] = Custrs_Project.getString("Название проекта");
                         date[i][2] = Custrs_Project.getString("Дата заказа проекта");
                         date[i][3] = Custrs_Project.getString("Стоимость проекта");
 
                         while (Custrs_Job.next()) {
-                            Integer ToDevelop[] = new Integer[100];
-                            ToDevelop[0] = Custrs_Job.getInt("Код проекта");
 
-                            if (IdProject == ToDevelop[0]) {
-                                ToDevelop[1] = Custrs_Job.getInt("Код вида работы");
-                                int IdTOW;
+                            System.out.println(+1);
+                            ToDevelop[1] = Custrs_Job.getInt("Код проекта");
+
+                            if (Objects.equals(ToDevelop[0], ToDevelop[1])) {
+
+                                ToDevelop[2] = Custrs_Job.getInt("Код вида работы");
                                 while (Custrs_TypeOfWork.next()) {
-                                    IdTOW = Custrs_TypeOfWork.getInt("Код вида работы");
-                                    if (IdTOW == ToDevelop[1]) {
-                                        ToDevelop[2] = Custrs_TypeOfWork.getInt("Номер этапа разаботки");
-                                        while (Custrs_Stage_OfDevelopment.next()) {
-                                            IdTOW = Custrs_Stage_OfDevelopment.getInt("Номер этапа разработки");
-                                            if (IdTOW == ToDevelop[2]) {
-                                                date[i][4] = Custrs_Stage_OfDevelopment.getString("Наименование этапа");
+
+                                    ToDevelop[3] = Custrs_TypeOfWork.getInt("Код вида работы");
+                                    if (Objects.equals(ToDevelop[3], ToDevelop[2])) {
+
+                                        ToDevelop[4] = Custrs_TypeOfWork.getInt("Номер этапа разаботки");
+
+                                        while (Custrs_StageOfDevelopment.next()) {
+
+                                            ToDevelop[5] = Custrs_StageOfDevelopment.getInt("Номер этапа разработки");
+                                            if (Objects.equals(ToDevelop[5], ToDevelop[4])) {
+
+                                                date[i][4] = Custrs_StageOfDevelopment.getString("Наименование этапа");
                                                 SizeOfTable++;
-                                            }
+                                            
+
+}
                                         }
                                     }
                                 }
@@ -264,7 +325,8 @@ class BasePanel extends JPanel {
                     }
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BasePanel.class
+.getName()).log(Level.SEVERE, null, ex);
             }
 
             String[] columnNames = {
