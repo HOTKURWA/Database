@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.border.LineBorder;
 
 public class Database {
 
@@ -36,6 +37,8 @@ class BasePanel extends JPanel {
     String UserName, url = "jdbc:postgresql://localhost:5432/DataBase", login = "postgres", password = "14589";
 
     int CodeTypeWork, UserID;
+
+    String NameTable[];
 
     public BasePanel() {
         LoginPanel();
@@ -110,53 +113,329 @@ class BasePanel extends JPanel {
 
     private void Developer() {
         SomeButton();
-        
-        String[] items = {
-            "1. Проект",
-            "2. Работа",
-            "3. Сдано",
-            "4. Вид работы",
-            "5. Этап разработки"
-        };
-        JComboBox comboBox = new JComboBox(items);
-        comboBox.setBounds(20, 50, 200, 30);
-        comboBox.setBackground(Color.WHITE);
+        JButton ReWriteButton = new JButton("Просмотр БД");
+        JButton SearchButton = new JButton("Поиск по БД");
 
-        ActionListener actionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        ReWriteButton.setBounds(325, 110, 150, 30);
+        SearchButton.setBounds(325, 160, 150, 30);
 
-                switch (comboBox.getSelectedIndex()) {
+        ReWriteButton.setBackground(Color.WHITE);
+        SearchButton.setBackground(Color.WHITE);
 
-                    case 0: {
+        add(ReWriteButton);
+        add(SearchButton);
 
-                        break;
+        ReWriteButton.addActionListener((ActionEvent e) -> {
+
+            SomeButton();
+            String[] items = {
+                "1. Проект",
+                "2. Работа",
+                "3. Сдано",
+                "4. Тип"
+            };
+            JComboBox comboBox = new JComboBox(items);
+            comboBox.setBounds(20, 50, 200, 30);
+            comboBox.setBackground(Color.WHITE);
+
+            ActionListener actionListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int TimeInt, i;
+
+                    switch (comboBox.getSelectedIndex()) {
+
+                        case 0: {
+                            try {
+                                String data[][] = new String[30][7];
+                                i = 1;
+                                Connection con = DriverManager.getConnection(url, login, password);
+                                Statement stmt1 = con.createStatement();
+                                ResultSet Custrs = stmt1.executeQuery("SELECT * FROM \"public\".\"Project\"");
+
+                                while (Custrs.next()) {
+
+                                    TimeInt = Custrs.getInt("Код проекта");
+                                    data[i][0] = String.valueOf(TimeInt);
+                                    data[i][1] = Custrs.getString("Название проекта");
+                                    data[i][2] = Custrs.getString("Дата заказа проекта");
+                                    data[i][3] = Custrs.getString("Стоимость проекта");
+                                    data[i][4] = Custrs.getString("Трудоемкость проекта");
+                                    TimeInt = Custrs.getInt("Код заказчика");
+                                    data[i][5] = String.valueOf(TimeInt);
+                                    TimeInt = Custrs.getInt("Код исполнитея");
+                                    data[i][6] = String.valueOf(TimeInt);
+                                    i++;
+
+                                }
+
+                                data[0][0] = "Код проекта";
+                                data[0][1] = "Название проекта";
+                                data[0][2] = "Дата заказа проекта";
+                                data[0][3] = "Стоимость проекта";
+                                data[0][4] = "Трудоемкость проекта";
+                                data[0][5] = "Код заказчика";
+                                data[0][6] = "Код исполнитея";
+
+                                JTable MyOrderTable = new JTable(data, data[0]);
+                                MyOrderTable.setBounds(20, 100, 750, 432);
+
+                                SomeButton();
+                                add(comboBox);
+                                add(MyOrderTable);
+                                con.close();
+                                break;
+                            } catch (SQLException ex) {
+                                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                        case 1: {
+
+                            try {
+                                String data[][] = new String[30][7];
+                                i = 1;
+                                Connection con = DriverManager.getConnection(url, login, password);
+                                Statement stmt1 = con.createStatement();
+                                ResultSet Custrs = stmt1.executeQuery("SELECT * FROM \"public\".\"Job\"");
+
+                                while (Custrs.next()) {
+
+                                    TimeInt = Custrs.getInt("Код работы");
+                                    data[i][0] = String.valueOf(TimeInt);
+                                    data[i][1] = Custrs.getString("Описание работы");
+                                    data[i][2] = Custrs.getString("Трудоемкость работы");
+                                    data[i][3] = Custrs.getString("Дата начала работы");
+                                    data[i][4] = Custrs.getString("Дата окончания работы");
+                                    TimeInt = Custrs.getInt("Код проекта");
+                                    data[i][5] = String.valueOf(TimeInt);
+                                    TimeInt = Custrs.getInt("Код вида работы");
+                                    data[i][6] = String.valueOf(TimeInt);
+                                    i++;
+
+                                }
+
+                                data[0][0] = "Код работы";
+                                data[0][1] = "Описание работы";
+                                data[0][2] = "Трудоемкость работы";
+                                data[0][3] = "Дата начала работы";
+                                data[0][4] = "Трудоемкость проекта";
+                                data[0][5] = "Код проекта";
+                                data[0][6] = "Код вида работы";
+
+                                JTable MyOrderTable = new JTable(data, data[0]);
+                                MyOrderTable.setBounds(20, 100, 750, 432);
+
+                                SomeButton();
+                                add(comboBox);
+                                add(MyOrderTable);
+                                con.close();
+                                break;
+                            } catch (SQLException ex) {
+                                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        case 2: {
+
+                            try {
+                                String data[][] = new String[30][4];
+                                i = 1;
+                                Connection con = DriverManager.getConnection(url, login, password);
+                                Statement stmt1 = con.createStatement();
+                                ResultSet Custrs = stmt1.executeQuery("SELECT * FROM \"public\".\"Commissioned\"");
+
+                                while (Custrs.next()) {
+
+                                    TimeInt = Custrs.getInt("Оценка сдачи");
+                                    data[i][0] = String.valueOf(TimeInt);
+                                    data[i][1] = Custrs.getString("Дата сдачи заказчику");
+                                    TimeInt = Custrs.getInt("Код работы");
+                                    data[i][2] = String.valueOf(TimeInt);
+                                    TimeInt = Custrs.getInt("Код сдачи");
+                                    data[i][3] = String.valueOf(TimeInt);
+                                    i++;
+                                }
+
+                                data[0][0] = "Оценка сдачи";
+                                data[0][1] = "Дата сдачи заказчику";
+                                data[0][2] = "Код работы";
+                                data[0][3] = "Код сдачи";
+
+                                JTable MyOrderTable = new JTable(data, data[0]);
+                                MyOrderTable.setBounds(20, 100, 750, 400);
+
+                                SomeButton();
+                                add(comboBox);
+                                add(MyOrderTable);
+                                con.close();
+                                break;
+                            } catch (SQLException ex) {
+                                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        case 3: {
+                            try {
+                                String data[][] = new String[30][6];
+                                i = 1;
+                                Connection con = DriverManager.getConnection(url, login, password);
+                                Statement stmt1 = con.createStatement();
+                                Statement stmt2 = con.createStatement();
+                                ResultSet Custrs = stmt1.executeQuery("SELECT * FROM \"public\".\"Type of work\"");
+                                ResultSet Custrs2 = stmt2.executeQuery("SELECT * FROM \"public\".\"Stage of development\"");
+                                while (Custrs2.next()) {
+                                    data[i][2] = Custrs2.getString("Наименование этапа");
+                                    i++;
+                                }
+                                i = 1;
+                                while (Custrs.next()) {
+
+                                    TimeInt = Custrs.getInt("Код вида работы");
+                                    data[i][0] = String.valueOf(TimeInt);
+                                    data[i][1] = Custrs.getString("Наименование вида работы");
+                                    TimeInt = Custrs.getInt("Номер этапа разаботки");
+                                    data[i][3] = String.valueOf(TimeInt);
+                                    TimeInt = Custrs.getInt("Трудоемкость вида работы");
+                                    data[i][4] = String.valueOf(TimeInt);
+                                    data[i][5] = Custrs.getString("Наименование вида работы");
+                                    i++;
+
+                                }
+
+                                data[0][0] = "Код вида работы";
+                                data[0][1] = "Наименование этапа";
+                                data[0][2] = "Наименование вида работы";
+                                data[0][3] = "Номер этапа разработки";
+                                data[0][4] = "Трудоемкость вида работы";
+                                data[0][5] = "Наименование вида работы";
+
+                                JTable MyOrderTable = new JTable(data, data[0]);
+                                MyOrderTable.setBounds(20, 100, 750, 400);
+
+                                SomeButton();
+                                add(comboBox);
+                                add(MyOrderTable);
+                                con.close();
+                                break;
+                            } catch (SQLException ex) {
+                                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                        default: {
+                            validate();
+                            break;
+                        }
+
                     }
-                    case 1: {
-                        
-                        break;
-                    }
-                    case 2: {
+                    validate();
 
-                        
-                        break;
-                    }
-                    default: {
-                        validate();
-                        break;
-                    }
-
+                    repaint();
                 }
-                validate();
-                repaint();
-            }
 
-        };
-        add(comboBox);
-        comboBox.addActionListener(actionListener);
-}
+            };
+            add(comboBox);
+            comboBox.addActionListener(actionListener);
+        });
 
-@SuppressWarnings("empty-statement")
+        SearchButton.addActionListener((ActionEvent e) -> {
+            SomeButton();
+            String[] items = {
+                "1. Проект",
+                "2. Работа",
+                "3. Сдано",
+                "4. Тип"};
+            JComboBox comboBox = new JComboBox(items);
+            comboBox.setBounds(20, 50, 200, 30);
+            comboBox.setBackground(Color.WHITE);
+            ActionListener actionListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    switch (comboBox.getSelectedIndex()) {
+
+                        case 0: {
+                            NameTable = new String[]{
+                                "Project",
+                                "Код работы",
+                                "Описание работы",
+                                "Трудоемкость работы",
+                                "Дата начала работы",
+                                "Дата окончания работы",
+                                "Код проекта",
+                                "Код вида работы"};
+                            SomeButton();
+                            add(comboBox);
+
+                            JComboBox Column = new JComboBox(NameTable);
+                            Column.setBounds(20, 100, 200, 30);
+                            Column.setBackground(Color.WHITE);
+                            add(Column);
+
+                            SearchBox();
+                            break;
+                        }
+                        case 1: {
+                            NameTable = new String[]{
+                                "Job",
+                                "Оценка сдачи",
+                                "Дата сдачи заказчику",
+                                "Код работы",
+                                "Код сдачи"};
+                            SomeButton();
+                            JComboBox Column = new JComboBox(NameTable);
+                            Column.setBounds(20, 100, 200, 30);
+                            Column.setBackground(Color.WHITE);
+                            add(Column);
+                            add(comboBox);
+                            SearchBox();
+                            break;
+                        }
+                        case 2: {
+                            NameTable = new String[]{
+                                "Commissioned",
+                                "Дата сдачи заказчику",
+                                "Код работы",
+                                "Код сдачи",
+                                "Стоимость проекта",
+                                "Трудоемкость проекта",
+                                "Код заказчика",
+                                "Код исполнитея"};
+                            SomeButton();
+                            JComboBox Column = new JComboBox(NameTable);
+                            Column.setBounds(20, 100, 200, 30);
+                            Column.setBackground(Color.WHITE);
+                            add(Column);
+                            add(comboBox);
+                            SearchBox();
+                            break;
+                        }
+                        case 3: {
+                            NameTable = new String[]{
+                                "Type of work",
+                                "Код вида работы",
+                                "Номер этапа разаботки",
+                                "Трудоемкость вида работы",
+                                "Наименование вида работы",};
+                            SomeButton();
+                            JComboBox Column = new JComboBox(NameTable);
+                            Column.setBounds(20, 100, 200, 30);
+                            Column.setBackground(Color.WHITE);
+                            add(Column);
+                            add(comboBox);
+                            SearchBox();
+                            break;
+                        }
+                    }
+                }
+            };
+
+            add(comboBox);
+            comboBox.addActionListener(actionListener);
+        });
+
+    }
+
+    @SuppressWarnings("empty-statement")
+
     private void Customer() {
         SomeButton();
 
@@ -189,11 +468,10 @@ class BasePanel extends JPanel {
                 }
                 stmt1.close();
                 con.close();
-            
 
-} catch (ClassNotFoundException | SQLException ex) {
+            } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(BasePanel.class
-.getName()).log(Level.SEVERE, null, ex);
+                    .getName()).log(Level.SEVERE, null, ex);
             }
 
             JLabel textOrdering = new JLabel("Оформление заказа № " + (CodeTypeWork + 1));
@@ -227,7 +505,7 @@ class BasePanel extends JPanel {
                     SrtingFieldOrdering = TextFieldOrdering.getText();
 
                     Connection con = DriverManager.getConnection(url, login, password);
-                    String query1 = "INSERT INTO \"Job\"(\"Код работы\", \"Описание\", \"Код проекта\",\"Трудоемкость работы\", \"Код вида работы\") VALUES(?, ?, ?, 1, 5)";
+                    String query1 = "INSERT INTO \"Job\"(\"Код работы\", \"Описание работы\", \"Код проекта\",\"Трудоемкость работы\", \"Код вида работы\") VALUES(?, ?, ?, 1, 5)";
                     String query2 = "INSERT INTO \"Project\"(\"Код проекта\", \"Код заказчика\",\"Название проекта\",\"Стоимость проекта\",\"Код исполнитея\",\"Трудоемкость проекта\") VALUES(?, ?, ?, 1000, 1, 1)";
                     String query3 = "INSERT INTO \"Type of work\"(\"Номер этапа разаботки\") VALUES(1)";
 
@@ -249,19 +527,17 @@ class BasePanel extends JPanel {
                     con.close();
 
                     Customer();
-                
 
-} catch (SQLException ex) {
-                    Logger.getLogger(BasePanel.class
-.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
         });
 
         MyOrderButton.addActionListener((ActionEvent e) -> {
             SomeButton();
-            int i = 0, SizeOfTable = 2;
-            String[][] date = new String[10][5];
+            int i = 0;
+            String[][] date = new String[20][5];
             Integer ToDevelop[] = new Integer[100];
             try {
                 int IdCustomer;
@@ -294,7 +570,6 @@ class BasePanel extends JPanel {
 
                         while (Custrs_Job.next()) {
 
-                            System.out.println(+1);
                             ToDevelop[1] = Custrs_Job.getInt("Код проекта");
 
                             if (Objects.equals(ToDevelop[0], ToDevelop[1])) {
@@ -313,10 +588,8 @@ class BasePanel extends JPanel {
                                             if (Objects.equals(ToDevelop[5], ToDevelop[4])) {
 
                                                 date[i][4] = Custrs_StageOfDevelopment.getString("Наименование этапа");
-                                                SizeOfTable++;
-                                            
 
-}
+                                            }
                                         }
                                     }
                                 }
@@ -324,29 +597,17 @@ class BasePanel extends JPanel {
                         }
                     }
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(BasePanel.class
-.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            String[] columnNames = {
-                "Код",
-                "Название",
-                "Дата заказа",
-                "Стоимость",
-                "Этап"
-            };
-
-            JTable MyOrderTable = new JTable(date, columnNames);
-            JScrollPane scrollPane = new JScrollPane(MyOrderTable);
-            MyOrderTable.setPreferredScrollableViewportSize(new Dimension(250, 100));
-            add(scrollPane);
-            //JScrollPane scrollPane = new JScrollPane(MyOrderTable);
-
-            MyOrderTable.setBounds(200, 100, 375, 338);
+            } catch (SQLException ex) {Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);}
+            
+            JTable MyOrderTable = new JTable(date, date[0]);
+            MyOrderTable.setBounds(20, 100, 750, 400);
             add(MyOrderTable);
         });
 
+    }
+
+    private void SearchBox() {
+    removeAll();
     }
 
     private void SomeButton() {
@@ -361,7 +622,7 @@ class BasePanel extends JPanel {
         UnLoginButton.setBackground(Color.WHITE);
         HomeButton.setBackground(Color.WHITE);
 
-        NameUser.setBounds(10, 520, 100, 30);
+        NameUser.setBounds(10, 530, 100, 30);
         UnLoginButton.setBounds(690, 5, 80, 30);
         HomeButton.setBounds(10, 5, 90, 30);
 
