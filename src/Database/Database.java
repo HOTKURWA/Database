@@ -42,6 +42,8 @@ class BasePanel extends JPanel {
         LoginPanel();
     }
 
+    @SuppressWarnings("empty-statement")
+
     private void LoginPanel() {
 
         JTextField LoginField = new JTextField(10);
@@ -110,6 +112,7 @@ class BasePanel extends JPanel {
     }
 
     private void Customer() {
+
         SomeButton();
 
         JButton AddOrderButton = new JButton("Сделать заказ");
@@ -282,7 +285,7 @@ class BasePanel extends JPanel {
     }
 
     private void Developer() {
-        setLayout(new FlowLayout());
+
         SomeButton();
         JButton ReWriteButton = new JButton("Просмотр БД");
         JButton SearchButton = new JButton("Поиск по БД");
@@ -316,8 +319,6 @@ class BasePanel extends JPanel {
         });
 
     }
-
-    @SuppressWarnings("empty-statement")
 
     private void VoiceTable(boolean Search) {
         String[] items = {
@@ -471,9 +472,7 @@ class BasePanel extends JPanel {
                     String strSeach = Custrs.getString(Nameline);
                     if (strSeach.equals(SearchString)) {
                         for (int i = 0; i < Stringlength; i++) {
-
                             data[n][i] = Custrs.getString(NameTable[i]);
-                            System.out.println(data[n][i]);
                         }
                         n++;
                     }
@@ -494,7 +493,10 @@ class BasePanel extends JPanel {
             } else {
                 SearchTable.setBounds(20, 100, 700, 430);
             }
+
+            SearchTable.setPreferredScrollableViewportSize(SearchTable.getPreferredSize());
             add(SearchTable);
+
             repaint();
 
         } catch (SQLException ex) {
