@@ -305,22 +305,22 @@ class BasePanel extends JPanel {
 
         ReWriteButton.addActionListener((ActionEvent e) -> {
             SomeButton();
-            VoiceTable(false);
+            VoiceTable(1);
         });
 
         SearchButton.addActionListener((ActionEvent e) -> {
             SomeButton();
-            VoiceTable(true);
+            VoiceTable(0);
 
         });
         DeliteButton.addActionListener((ActionEvent e) -> {
             SomeButton();
-            VoiceTable(false);
+            VoiceTable(2);
         });
 
     }
 
-    private void VoiceTable(boolean Search) {
+    private void VoiceTable(int Search) {
         String[] items = {
             "1. Проект",
             "2. Работа",
@@ -378,11 +378,12 @@ class BasePanel extends JPanel {
             }
             SomeButton();
             add(comboBox);
-            if (Search) {
+            if (Search == 0) {
                 VoiceNameline();
                 SearchBox();
             } else {
-                WriteTable(null);
+                WriteTable(null, Search);
+
             }
         };
         add(comboBox);
@@ -442,7 +443,7 @@ class BasePanel extends JPanel {
         JButton SearchButton = new JButton("Искать");
 
         SearchField.setBounds(520, 50, 200, 30);
-        SearchButton.setBounds(350, 100, 100, 30);
+        SearchButton.setBounds(350, 100, 100, 20);
 
         SearchButton.setBackground(Color.WHITE);
 
@@ -452,19 +453,21 @@ class BasePanel extends JPanel {
         SearchButton.addActionListener((ActionEvent e) -> {
 
             String SearchString = (SearchField.getText());
-            WriteTable(SearchString);
+            WriteTable(SearchString, 0);
 
         });
 
     }
 
-    private void WriteTable(String SearchString) {
+    private void WriteTable(String SearchString, int Delite) {
         try {
             int n = 1;
             int Stringlength = NameTable.length;
             String data[][] = new String[30][Stringlength];
             Connection con = DriverManager.getConnection(url, login, password);
+
             Statement stmt1 = con.createStatement();
+            
             ResultSet Custrs = stmt1.executeQuery("SELECT * FROM \"public\".\"" + Namefolder + "\"");
 
             while (Custrs.next()) {
@@ -491,7 +494,36 @@ class BasePanel extends JPanel {
             if (SearchString != null) {
                 SearchTable.setBounds(20, 150, 750, 350);
             } else {
-                SearchTable.setBounds(20, 100, 700, 430);
+                if (Delite == 2) {
+                    String items[] = new String[n - 1];
+                    for (int i = 1; i < n; i++) {
+                        items[i - 1] = String.valueOf(i);
+                    }
+                    JComboBox comboBox = new JComboBox(items);
+                    JButton DeliteButton = new JButton("Удалить");
+
+                    comboBox.setBounds(550, 100, 200, 30);
+                    DeliteButton.setBounds(600, 150, 100, 20);
+
+                    comboBox.setBackground(Color.WHITE);
+                    DeliteButton.setBackground(Color.WHITE);
+
+                    add(comboBox);
+                    add(DeliteButton);
+                    //ActionListener actionListener = (ActionEvent el) -> {
+//                        DeliteButton.addActionListener((ActionEvent e) -> {
+//                            System.out.println(comboBox.getSelectedIndex() + "sasasa");
+//                            try {
+//
+//                                ResultSet CustrsD = stmt2.executeQuery("DELETE FROM \"public\".\"" + Namefolder + "WHERE `number` =" + comboBox.getSelectedIndex());
+//
+//                            } catch (SQLException ex) {
+//                                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+//                            }
+//                        });
+//                    };
+                }
+                SearchTable.setBounds(20, 100, 525, 430);
             }
 
             SearchTable.setPreferredScrollableViewportSize(SearchTable.getPreferredSize());
