@@ -5,6 +5,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -170,7 +179,6 @@ class BasePanel extends JPanel {
             add(textdescription);
             add(TextFieldOrdering);
             add(SendButton);
-
             repaint();
 
             SendButton.addActionListener((ActionEvent e1) -> {
@@ -360,10 +368,10 @@ class BasePanel extends JPanel {
                 case 2: {
                     Namefolder = "Commissioned";
                     NameTable = new String[]{
-                        "Оценка сдачи",
+                        "Код сдачи",
                         "Дата сдачи заказчику",
                         "Код работы",
-                        "Код сдачи"};
+                        "Оценка сдачи"};
                     break;
                 }
                 case 3: {
@@ -453,8 +461,8 @@ class BasePanel extends JPanel {
         SearchButton.addActionListener((ActionEvent e) -> {
 
             String SearchString = (SearchField.getText());
+            SearchString = SearchString.trim();
             WriteTable(SearchString, 0);
-
         });
 
     }
@@ -467,7 +475,8 @@ class BasePanel extends JPanel {
             Connection con = DriverManager.getConnection(url, login, password);
 
             Statement stmt1 = con.createStatement();
-            
+            Statement stmt2 = con.createStatement();
+
             ResultSet Custrs = stmt1.executeQuery("SELECT * FROM \"public\".\"" + Namefolder + "\"");
 
             while (Custrs.next()) {
@@ -495,9 +504,10 @@ class BasePanel extends JPanel {
                 SearchTable.setBounds(20, 150, 750, 350);
             } else {
                 if (Delite == 2) {
-                    String items[] = new String[n - 1];
-                    for (int i = 1; i < n; i++) {
-                        items[i - 1] = String.valueOf(i);
+                    String items[] = new String[n];
+               
+                    for (int i = 1; i <= n; i++) {
+                        items[i-1] = data[i][0];
                     }
                     JComboBox comboBox = new JComboBox(items);
                     JButton DeliteButton = new JButton("Удалить");
@@ -510,18 +520,15 @@ class BasePanel extends JPanel {
 
                     add(comboBox);
                     add(DeliteButton);
-                    //ActionListener actionListener = (ActionEvent el) -> {
-//                        DeliteButton.addActionListener((ActionEvent e) -> {
-//                            System.out.println(comboBox.getSelectedIndex() + "sasasa");
-//                            try {
-//
-//                                ResultSet CustrsD = stmt2.executeQuery("DELETE FROM \"public\".\"" + Namefolder + "WHERE `number` =" + comboBox.getSelectedIndex());
-//
-//                            } catch (SQLException ex) {
-//                                Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
-//                            }
-//                        });
-//                    };
+
+                    DeliteButton.addActionListener((ActionEvent e) -> {
+                        try {
+                            ResultSet CustrsD = stmt2.executeQuery("DELETE FROM \"public\".\"" + Namefolder + "\" WHERE (\"" + data[0][0] + "\") = '" + data[comboBox.getSelectedIndex()+1][0] + "' ");
+                        } catch (SQLException ex) {
+                            Logger.getLogger(BasePanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    });
+
                 }
                 SearchTable.setBounds(20, 100, 525, 430);
             }
